@@ -2,6 +2,7 @@ import { Ball } from './classes/Ball.js';
 import { Peg } from './classes/Peg.js';
 import { GiftHistory } from './classes/GiftHistory.js';
 import { Rankings } from './classes/Rankings.js';
+import { BinHistory } from './classes/BinHistory.js';
 import {
   BALL_SIZE,
   ROWS,
@@ -19,6 +20,7 @@ import {
 const BALL_POOL = [];
 let giftHistory;
 let rankings;
+let binHistory;
 
 let pegs = [];
 let socket;
@@ -144,9 +146,10 @@ function init() {
 
   giftHistory = new GiftHistory(ctx);
   rankings = new Rankings(ctx);
+  binHistory = new BinHistory();
 
   for (let i = 0; i < MAX_BALLS; i++) {
-    BALL_POOL.push(new Ball(canvasWidth, OFFSET_Y, ctx, rankings, scoreAnimations));
+    BALL_POOL.push(new Ball(canvasWidth, OFFSET_Y, ctx, rankings, scoreAnimations, binHistory));
   }
 
   for (let y = 0; y < ROWS; y++) {
