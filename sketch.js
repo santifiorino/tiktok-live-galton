@@ -7,7 +7,6 @@ import {
   ROWS,
   OFFSET_Y,
   MAX_BALLS,
-  RANKING_POSITION,
   binColours,
   binScores,
   defaultAvatarUrl
@@ -15,8 +14,6 @@ import {
 import {
   galtonPosToXCoord,
   galtonPosToYCoord,
-  map,
-  createCircleMask
 } from './utils.js';
 
 const BALL_POOL = [];
