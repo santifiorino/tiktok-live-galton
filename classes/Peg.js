@@ -1,4 +1,4 @@
-import { BALL_SIZE } from './config.js';
+import { BALL_SIZE } from '../config.js';
 
 export class Peg {
     constructor(x, y) {

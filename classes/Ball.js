@@ -3,12 +3,12 @@ import {
     ROWS,
     binScores,
     binColours
-} from './config.js';
+} from '../config.js';
 import {
     map,
     galtonPosToXCoord,
     galtonPosToYCoord
-} from './utils.js';
+} from '../utils.js';
 
 export class Ball {
     constructor(canvasWidth, offsetY, ctx, rankings, scoreAnimations) {

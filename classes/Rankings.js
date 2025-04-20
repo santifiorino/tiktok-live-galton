@@ -1,4 +1,4 @@
-import { RANKING_POSITION } from './config.js';
+import { RANKING_POSITION } from '../config.js';
 
 export class Rankings {
     constructor(ctx) {

@@ -1,4 +1,4 @@
-import { MAX_HISTORY, HISTORY_POSITION, defaultAvatarUrl } from './config.js';
+import { MAX_HISTORY, HISTORY_POSITION, defaultAvatarUrl } from '../config.js';
 
 export class GiftHistory {
     constructor(ctx) {

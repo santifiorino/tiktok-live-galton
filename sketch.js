@@ -1,7 +1,7 @@
-import { Ball } from './Ball.js';
-import { Peg } from './Peg.js';
-import { GiftHistory } from './GiftHistory.js';
-import { Rankings } from './Rankings.js';
+import { Ball } from './classes/Ball.js';
+import { Peg } from './classes/Peg.js';
+import { GiftHistory } from './classes/GiftHistory.js';
+import { Rankings } from './classes/Rankings.js';
 import {
   BALL_SIZE,
   ROWS,
