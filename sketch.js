@@ -6,8 +6,6 @@ import {
   ROWS,
   OFFSET_Y,
   MAX_BALLS,
-  MAX_HISTORY,
-  HISTORY_POSITION,
   RANKING_POSITION,
   binColours,
   binScores,
@@ -21,7 +19,6 @@ import {
 } from './utils.js';
 
 const BALL_POOL = [];
-let sharedCircleMask;
 let giftHistory;
 
 let pegs = [];
@@ -77,49 +74,6 @@ function connectWebSocket() {
   socket.onerror = function (error) {
     console.error('WebSocket error:', error);
   };
-}
-
-function drawGiftInfo(gift, x, y, bgColor) {
-  const rectWidth = 300;
-  const rectHeight = 60;
-  const avatarSize = 40;
-  const giftImageSize = 30;
-
-  if (!gift || !gift.avatarImg) return;
-
-  ctx.fillStyle = bgColor;
-  ctx.fillRect(x, y, rectWidth, rectHeight);
-
-  ctx.drawImage(gift.avatarImg, x + 10, y + 10, avatarSize, avatarSize);
-
-  let displayName = gift.nickname;
-  if (displayName.length > 17) {
-    displayName = displayName.substring(0, 15) + '...';
-  }
-
-  ctx.fillStyle = "#000000";
-  ctx.font = "600 14px 'Montserrat', sans-serif";
-  ctx.textAlign = "left";
-  ctx.textBaseline = "middle";
-  ctx.fillText(displayName, x + 60, y + 22);
-
-  ctx.font = "400 14px 'Montserrat', sans-serif";
-  ctx.fillText(`${gift.ballsSpawned}/${gift.ballsSpawned + gift.ballsRemaining}`,
-    x + 60, y + 43);
-
-  if (gift.gift_image) {
-    ctx.drawImage(gift.gift_image,
-      x + rectWidth - giftImageSize - 10,
-      y + 15,
-      giftImageSize,
-      giftImageSize
-    );
-    ctx.textAlign = "right";
-    ctx.fillText(`${gift.gift_amount}x`,
-      x + rectWidth - giftImageSize - 25,
-      y + 30
-    );
-  }
 }
 
 function drawBins() {
@@ -279,7 +233,6 @@ function init() {
 
   document.body.appendChild(canvas);
 
-  sharedCircleMask = createCircleMask(BALL_SIZE);
   giftHistory = new GiftHistory(ctx);
 
   for (let i = 0; i < MAX_BALLS; i++) {
