@@ -3,15 +3,18 @@ import {
     ROWS,
     OFFSET_Y,
     binScores,
-    binColours,
+    binColours
+} from './config.js';
+import {
     map,
     galtonPosToXCoord,
     galtonPosToYCoord
-} from './config.js';
+} from './utils.js';
 
 export class Ball {
-    constructor(canvasWidth, ctx, userScores, scoreAnimations, displaySortedScores) {
+    constructor(canvasWidth, offsetY, ctx, userScores, scoreAnimations, displaySortedScores) {
         this.canvasWidth = canvasWidth;
+        this.offsetY = offsetY;
         this.ctx = ctx;
         this.userScores = userScores;
         this.scoreAnimations = scoreAnimations;
@@ -62,12 +65,12 @@ export class Ball {
                 this.animationStep = 0.001;
             }
             this.showX = galtonPosToXCoord(this.x + this.multiplier * (Math.pow(this.animationStep, 1)), this.canvasWidth);
-            this.showY = galtonPosToYCoord(this.y + (Math.pow(this.animationStep, 4)) - 1 / 2);
+            this.showY = galtonPosToYCoord(this.y + (Math.pow(this.animationStep, 4)) - 1 / 2, this.offsetY);
             return;
         }
 
-        if (this.y == 0 && this.showY >= OFFSET_Y - BALL_SIZE) {
-            this.showY = OFFSET_Y - BALL_SIZE;
+        if (this.y == 0 && this.showY >= this.offsetY - BALL_SIZE) {
+            this.showY = this.offsetY - BALL_SIZE;
             this.multiplier = Math.random() < 0.5 ? -1 : 1;
             this.animationStep = 0.001;
             return;
@@ -79,7 +82,7 @@ export class Ball {
         this.showY += 1;
         this.showX = galtonPosToXCoord(this.x, this.canvasWidth);
 
-        if (this.showY >= galtonPosToYCoord(ROWS) && !this.hasScored) {
+        if (this.showY >= galtonPosToYCoord(ROWS, this.offsetY) && !this.hasScored) {
             this.hasScored = true;
             const binWidth = (BALL_SIZE + 6) * 2;
             const startX = galtonPosToXCoord(-ROWS, this.canvasWidth) - binWidth / 2;
@@ -101,7 +104,7 @@ export class Ball {
 
                 this.scoreAnimations.push({
                     x: this.showX,
-                    y: galtonPosToYCoord(ROWS + 1) - 30,
+                    y: galtonPosToYCoord(ROWS + 1, this.offsetY) - 30,
                     color: binColours[binIndex % binColours.length],
                     startTime: Date.now(),
                     score: "+" + binScore

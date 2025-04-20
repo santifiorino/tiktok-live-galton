@@ -1,4 +1,5 @@
 import { Ball } from './Ball.js';
+import { Peg } from './Peg.js';
 import {
   BALL_SIZE,
   ROWS,
@@ -11,6 +12,12 @@ import {
   binScores,
   defaultAvatarUrl
 } from './config.js';
+import {
+  galtonPosToXCoord,
+  galtonPosToYCoord,
+  map,
+  createCircleMask
+} from './utils.js';
 
 const BALL_POOL = [];
 let sharedCircleMask;
@@ -31,20 +38,6 @@ let scoreAnimations = [];
 let userScores = {};
 let avatarCache = new Map();
 
-function createCircleMask() {
-  const maskCanvas = document.createElement('canvas');
-  maskCanvas.width = BALL_SIZE;
-  maskCanvas.height = BALL_SIZE;
-  const maskCtx = maskCanvas.getContext('2d');
-
-  maskCtx.fillStyle = '#fff';
-  maskCtx.beginPath();
-  maskCtx.arc(BALL_SIZE / 2, BALL_SIZE / 2, BALL_SIZE / 2, 0, Math.PI * 2);
-  maskCtx.fill();
-
-  return maskCanvas;
-}
-
 function displaySortedScores() {
   const sortedScores = Object.entries(userScores)
     .sort(([, a], [, b]) => b.score - a.score);
@@ -53,32 +46,6 @@ function displaySortedScores() {
   sortedScores.forEach(([username, data], index) => {
     console.log(`${index + 1}. ${username}: ${data.score}`);
   });
-}
-
-class Peg {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-  }
-
-  show() {
-    ctx.fillStyle = "#000000";
-    ctx.beginPath();
-    ctx.arc(galtonPosToXCoord(this.x), galtonPosToYCoord(this.y), BALL_SIZE / 2, 0, Math.PI * 2);
-    ctx.fill();
-  }
-}
-
-function galtonPosToXCoord(galtonX) {
-  return galtonX * (BALL_SIZE / 2 + 3) * 2 + canvasWidth / 2;
-}
-
-function galtonPosToYCoord(galtonY) {
-  return OFFSET_Y + galtonY * BALL_SIZE * 2;
-}
-
-function map(value, start1, stop1, start2, stop2) {
-  return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1));
 }
 
 function createBalls() {
@@ -346,16 +313,15 @@ function drawCurrentGift() {
 
 function drawBins() {
   const binWidth = (BALL_SIZE + 6) * 2;
-  const binHeight = canvasHeight - galtonPosToYCoord(ROWS);
-  const startX = galtonPosToXCoord(-ROWS) - binWidth / 2;
+  const binHeight = canvasHeight - galtonPosToYCoord(ROWS, OFFSET_Y);
+  const startX = galtonPosToXCoord(-ROWS, canvasWidth) - binWidth / 2;
 
   for (let i = 0; i <= ROWS; i++) {
     const x = startX + (i * binWidth);
-    const y = galtonPosToYCoord(ROWS) + 50;
+    const y = galtonPosToYCoord(ROWS, OFFSET_Y) + 50;
 
     ctx.fillStyle = binColours[i % binColours.length];
     ctx.fillRect(x, y, binWidth, binHeight);
-
 
     ctx.fillStyle = "#222222";
     ctx.font = "bold 24px 'Montserrat', sans-serif";
@@ -450,7 +416,9 @@ function draw() {
   drawBins();
 
   for (const peg of pegs) {
-    peg.show();
+    peg.show(ctx,
+      (x) => galtonPosToXCoord(x, canvasWidth),
+      (y) => galtonPosToYCoord(y, OFFSET_Y));
   }
 
   // Update and draw score animations
@@ -500,10 +468,10 @@ function init() {
 
   document.body.appendChild(canvas);
 
-  sharedCircleMask = createCircleMask();
+  sharedCircleMask = createCircleMask(BALL_SIZE);
 
   for (let i = 0; i < MAX_BALLS; i++) {
-    BALL_POOL.push(new Ball(canvasWidth, ctx, userScores, scoreAnimations, displaySortedScores));
+    BALL_POOL.push(new Ball(canvasWidth, OFFSET_Y, ctx, userScores, scoreAnimations, displaySortedScores));
   }
 
   for (let y = 0; y < ROWS; y++) {
