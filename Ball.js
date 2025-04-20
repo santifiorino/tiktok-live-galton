@@ -12,13 +12,12 @@ import {
 } from './utils.js';
 
 export class Ball {
-    constructor(canvasWidth, offsetY, ctx, userScores, scoreAnimations, displaySortedScores) {
+    constructor(canvasWidth, offsetY, ctx, rankings, scoreAnimations) {
         this.canvasWidth = canvasWidth;
         this.offsetY = offsetY;
         this.ctx = ctx;
-        this.userScores = userScores;
+        this.rankings = rankings;
         this.scoreAnimations = scoreAnimations;
-        this.displaySortedScores = displaySortedScores;
         this.reset();
         this.img = null;
         this.diamondCount = 1;
@@ -92,14 +91,7 @@ export class Ball {
                 const binScore = binScores[binIndex];
 
                 if (this.username) {
-                    if (!this.userScores[this.username]) {
-                        this.userScores[this.username] = {
-                            score: 0,
-                            avatar: this.img.src
-                        };
-                    }
-                    this.userScores[this.username].score += binScore;
-                    this.displaySortedScores();
+                    this.rankings.updateScore(this.username, binScore, this.img.src);
                 }
 
                 this.scoreAnimations.push({
