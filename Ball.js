@@ -1,7 +1,6 @@
 import {
     BALL_SIZE,
     ROWS,
-    OFFSET_Y,
     binScores,
     binColours
 } from './config.js';

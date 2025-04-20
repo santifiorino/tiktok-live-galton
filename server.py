@@ -5,7 +5,7 @@ import asyncio
 import websockets
 import json
 
-client = TikTokLiveClient(unique_id="@kingg_of_tiktokk")
+client = TikTokLiveClient(unique_id="@santichkaa")
 
 connected_clients = set()
 
